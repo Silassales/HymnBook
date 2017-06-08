@@ -5,6 +5,8 @@
 -----------------------------------------------------------------------------------------
 
 local composer = require( "composer" )
+local widget = require( "widget" )
+
 local scene = composer.newScene()
 
 --------------------------------------------
@@ -39,19 +41,38 @@ local function onBackgroundTouch( self, event )
 	end
 end
 
+-- Function to handle button events
+local function settingsButton( event )
+ 
+    if ( "ended" == event.phase ) then
+        composer.gotoScene( "settings", "slideDown", 200 )
+    end
+end
+
+
 function scene:create( event )
 	local sceneGroup = self.view
-
-	-- Called when the scene's view does not exist.
-	-- 
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
 	background = display.newImageRect( sceneGroup, "images/hymnCover.jpg", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
+
+	--settings buttons
+	local settings_button = widget.newButton(
+	    {
+	        width = 50,
+	        height = 50,
+	        defaultFile = "images/settings.png",
+	        overFile = "images/settings.png",
+	        onEvent = settingsButton
+	    }
+	)
+	 
+	-- set button to bottom right
+	settings_button.x = display.contentWidth - 30
+	settings_button.y = display.contentHeight - 30
 	
 	-- Add the key event listener
 	Runtime:addEventListener( "key", onKeyEvent )
