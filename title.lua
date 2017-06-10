@@ -54,7 +54,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 	-- display a background image
-	background = display.newImageRect( sceneGroup, "images/hymnCover.jpg", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( sceneGroup, "images/background.png", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0

@@ -19,7 +19,7 @@ function Hymn.new ( hymn_number, num_pages, pages )
 	-- if pages is nil, set the first url to a default hymn 0 page -> prevent runtime errors
 	self.page_table = {}
 	if pages == nil then
-		table.insert( self.page_table, "hymn0.jpg" )
+		table.insert( self.page_table, "1.png" )
 	else
 		-- perform a copy instead of assignment as lua deals with pointers
 		for i = 1, self.num_pages do
@@ -69,93 +69,52 @@ function Hymn.last(self)
 end
 
 -- Some functions for setting up the hymn table used by page_view.lua
-function GetHymnTable()
-	hymn_table = {}
-
-	-- hymn_table, constructor ( hymn_number, num_pages, pages )
-	table.insert( hymn_table, Hymn.new( 1, 1, { RPTI .. "/004.jpg" }))
-	table.insert( hymn_table, Hymn.new( 2, 2, { RPTI .. "/005.jpg", RPTI .. "/006.jpg" }))
-	table.insert( hymn_table, Hymn.new( 3, 3, { RPTI .. "/007.jpg", RPTI .. "/008.jpg", RPTI .. "/009.jpg" }))
-	table.insert( hymn_table, Hymn.new( 4, 1, { RPTI .. "/010.jpg" }))
-	table.insert( hymn_table, Hymn.new( 5, 1, { RPTI .. "/011.jpg" }))
-	table.insert( hymn_table, Hymn.new( 6, 1, { RPTI .. "/012.jpg" }))
-	table.insert( hymn_table, Hymn.new( 7, 2, { RPTI .. "/013.jpg", RPTI .. "/014.jpg" }))
-	table.insert( hymn_table, Hymn.new( 8, 1, { RPTI .. "/015.jpg" }))
-	table.insert( hymn_table, Hymn.new( 9, 1, { RPTI .. "/016.jpg" }))
-	table.insert( hymn_table, Hymn.new( 10, 3, { RPTI .. "/017.jpg", RPTI .. "/018.jpg", RPTI .. "/019.jpg" }))
-	table.insert( hymn_table, Hymn.new( 11, 1, { RPTI .. "/020.jpg" }))
-	table.insert( hymn_table, Hymn.new( 12, 1, { RPTI .. "/021.jpg" }))
-	table.insert( hymn_table, Hymn.new( 13, 1, { RPTI .. "/022.jpg" }))
-	table.insert( hymn_table, Hymn.new( 14, 1, { RPTI .. "/023.jpg" }))
-	table.insert( hymn_table, Hymn.new( 15, 2, { RPTI .. "/024.jpg", RPTI .. "/025.jpg" }))
-	table.insert( hymn_table, Hymn.new( 16, 2, { RPTI .. "/026.jpg", RPTI .. "/027.jpg" }))
-	table.insert( hymn_table, Hymn.new( 17, 1, { RPTI .. "/028.jpg" }))
-	table.insert( hymn_table, Hymn.new( 18, 2, { RPTI .. "/029.jpg", RPTI .. "/030.jpg" }))
-	table.insert( hymn_table, Hymn.new( 19, 1, { RPTI .. "/031.jpg" }))
-	table.insert( hymn_table, Hymn.new( 20, 1, { RPTI .. "/032.jpg" }))
-	table.insert( hymn_table, Hymn.new( 21, 1, { RPTI .. "/033.jpg" }))
-	table.insert( hymn_table, Hymn.new( 22, 1, { RPTI .. "/034.jpg" }))
-	table.insert( hymn_table, Hymn.new( 23, 1, { RPTI .. "/035.jpg" }))
-	table.insert( hymn_table, Hymn.new( 24, 2, { RPTI .. "/036.jpg", RPTI .. "/037.jpg" }))
-	table.insert( hymn_table, Hymn.new( 25, 1, { RPTI .. "/038.jpg" }))
-	table.insert( hymn_table, Hymn.new( 26, 1, { RPTI .. "/039.jpg" }))
-	table.insert( hymn_table, Hymn.new( 27, 1, { RPTI .. "/040.jpg" }))
-	table.insert( hymn_table, Hymn.new( 28, 3, { RPTI .. "/041.jpg", RPTI .. "/042.jpg", RPTI .. "/043.jpg" }))
-	table.insert( hymn_table, Hymn.new( 29, 1, { RPTI .. "/044.jpg" }))
-	table.insert( hymn_table, Hymn.new( 30, 2, { RPTI .. "/045.jpg", RPTI .. "/046.jpg" }))
-	table.insert( hymn_table, Hymn.new( 31, 1, { RPTI .. "/047.jpg" }))
-	table.insert( hymn_table, Hymn.new( 32, 1, { RPTI .. "/048.jpg" }))
-	table.insert( hymn_table, Hymn.new( 33, 1, { RPTI .. "/049.jpg" }))
-	table.insert( hymn_table, Hymn.new( 34, 2, { RPTI .. "/050.jpg", RPTI .. "/051.jpg" }))
-	table.insert( hymn_table, Hymn.new( 35, 2, { RPTI .. "/051.jpg", RPTI .. "/052.jpg" }))
-	table.insert( hymn_table, Hymn.new( 36, 2, { RPTI .. "/053.jpg", RPTI .. "/054.jpg" }))
-	table.insert( hymn_table, Hymn.new( 37, 3, { RPTI .. "/055.jpg", RPTI .. "/056.jpg", RPTI .. "/057.jpg" }))
-	table.insert( hymn_table, Hymn.new( 38, 1, { RPTI .. "/058.jpg" }))
-	table.insert( hymn_table, Hymn.new( 39, 1, { RPTI .. "/059.jpg" }))
-	table.insert( hymn_table, Hymn.new( 40, 1, { RPTI .. "/060.jpg" }))
-	table.insert( hymn_table, Hymn.new( 41, 1, { RPTI .. "/061.jpg" }))
-	table.insert( hymn_table, Hymn.new( 42, 1, { RPTI .. "/062.jpg" }))
-	table.insert( hymn_table, Hymn.new( 43, 2, { RPTI .. "/063.jpg", RPTI .. "/064.jpg" }))
-	table.insert( hymn_table, Hymn.new( 44, 2, { RPTI .. "/065.jpg", RPTI .. "/066.jpg" }))
-	table.insert( hymn_table, Hymn.new( 45, 1, { RPTI .. "/067.jpg" }))
-	table.insert( hymn_table, Hymn.new( 46, 1, { RPTI .. "/068.jpg" }))
-	table.insert( hymn_table, Hymn.new( 47, 1, { RPTI .. "/069.jpg" }))
-	table.insert( hymn_table, Hymn.new( 48, 2, { RPTI .. "/070.jpg", RPTI .. "/071.jpg" }))
-	table.insert( hymn_table, Hymn.new( 49, 1, { RPTI .. "/072.jpg" }))
-	table.insert( hymn_table, Hymn.new( 50, 1, { RPTI .. "/073.jpg" }))
-	table.insert( hymn_table, Hymn.new( 51, 1, { RPTI .. "/074.jpg" }))
-	table.insert( hymn_table, Hymn.new( 52, 1, { RPTI .. "/075.jpg" }))
-	table.insert( hymn_table, Hymn.new( 53, 1, { RPTI .. "/076.jpg" }))
-	table.insert( hymn_table, Hymn.new( 54, 1, { RPTI .. "/077.jpg" }))
-	table.insert( hymn_table, Hymn.new( 55, 1, { RPTI .. "/078.jpg" }))
-	table.insert( hymn_table, Hymn.new( 56, 1, { RPTI .. "/079.jpg" }))
-	table.insert( hymn_table, Hymn.new( 57, 2, { RPTI .. "/080.jpg", RPTI .. "/081.jpg" }))
-	table.insert( hymn_table, Hymn.new( 58, 1, { RPTI .. "/082.jpg" }))
-	table.insert( hymn_table, Hymn.new( 59, 1, { RPTI .. "/083.jpg" }))
-	table.insert( hymn_table, Hymn.new( 60, 1, { RPTI .. "/084.jpg" }))
-	table.insert( hymn_table, Hymn.new( 61, 1, { RPTI .. "/085.jpg" }))
-	table.insert( hymn_table, Hymn.new( 62, 4, { RPTI .. "/086.jpg", RPTI .. "/087.jpg", RPTI .. "/088.jpg", RPTI .. "/089.jpg" }))
-	table.insert( hymn_table, Hymn.new( 63, 1, { RPTI .. "/090.jpg", RPTI .. "/091.jpg" }))
-	table.insert( hymn_table, Hymn.new( 64, 1, { RPTI .. "/092.jpg" }))
-	table.insert( hymn_table, Hymn.new( 65, 1, { RPTI .. "/093.jpg" }))
-	table.insert( hymn_table, Hymn.new( 66, 1, { RPTI .. "/094.jpg" }))
-	table.insert( hymn_table, Hymn.new( 67, 1, { RPTI .. "/095.jpg" }))
-	table.insert( hymn_table, Hymn.new( 68, 2, { RPTI .. "/096.jpg", RPTI .. "/097.jpg" }))
-	table.insert( hymn_table, Hymn.new( 69, 1, { RPTI .. "/098.jpg" }))
-	table.insert( hymn_table, Hymn.new( 70, 1, { RPTI .. "/099.jpg" }))
-	table.insert( hymn_table, Hymn.new( 71, 1, { RPTI .. "/100.jpg" }))
-	table.insert( hymn_table, Hymn.new( 72, 1, { RPTI .. "/101.jpg", RPTI .. "/102.jpg" }))
-	table.insert( hymn_table, Hymn.new( 73, 1, { RPTI .. "/103.jpg" }))
-	table.insert( hymn_table, Hymn.new( 74, 1, { RPTI .. "/104.jpg", RPTI .. "/105.jpg" }))
-	table.insert( hymn_table, Hymn.new( 75, 1, { RPTI .. "/105.jpg", RPTI .. "/106.jpg" }))
-	table.insert( hymn_table, Hymn.new( 76, 1, { RPTI .. "/107.jpg", RPTI .. "/108.jpg" }))
-	table.insert( hymn_table, Hymn.new( 77, 1, { RPTI .. "/109.jpg" }))
-
-
-
-
-	return hymn_table
+-- helper
+local function tableContains (table, value)
+    for i = 1,#table do
+        if table[i] == value then
+            return true
+        end
+    end
+    return false
 end
+
+local two_page = { 2,7,16,18,24,30,34,35,36,43,44,48,57,63,68,74,75,76,77,78,82,84,85,88,89,99,100,101,104,105,106,110,113,120,121,122,125,128,129,132,135,143,144,147,150,101,163,173,176 }
+local three_page = { 3,10,28,37,93,95,116,127,134 }
+local four_page = { 62,140,170 }
+
+local page_table = { ["2"]=two_page, ["3"]=three_page, ["4"]=four_page }
+
+local function generateHymnTable ( hymn_page_count_table, num_hymns )
+    hymn_table = {}
+    current_page = 1
+
+    for i = 1, num_hymns do
+        if tableContains( hymn_page_count_table["2"], i) then
+            table.insert( hymn_table, Hymn.new( i, 2, { RPTI .. "/" .. current_page .. ".png", RPTI .. "/" .. current_page+1 .. ".png"}))
+            current_page = current_page + 2
+        elseif tableContains( hymn_page_count_table["3"], i) then
+            table.insert( hymn_table, Hymn.new( i, 3, { RPTI .. "/" .. current_page .. ".png", RPTI .. "/" .. current_page+1 .. ".png", RPTI .. "/" .. current_page+2 .. ".png"}))
+            current_page = current_page + 3
+        elseif tableContains( hymn_page_count_table["4"], i) then
+            table.insert( hymn_table, Hymn.new( i, 4, { RPTI .. "/" .. current_page .. ".png", RPTI .. "/" .. current_page+1 .. ".png", RPTI .. "/" .. current_page+2 .. ".png", RPTI .. "/" .. current_page+3 .. ".png"}))
+            current_page = current_page + 4
+        else 
+            table.insert( hymn_table, Hymn.new( i, 1, { RPTI .. "/" .. current_page .. ".png"}))
+            current_page = current_page + 1
+        end
+    end
+
+    return hymn_table
+end
+
+-- FIXME change page_table to a instance member of the table class so that the call can be 
+-- directly to generateHymnTable instead of through this wrapper function
+local function GetHymnTable ( num_hymns )
+	return generateHymnTable( page_table, num_hymns )
+end
+
+
 page_lib.GetHymnTable = GetHymnTable
 	
 return page_lib
