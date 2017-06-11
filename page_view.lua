@@ -19,8 +19,8 @@ local next_screen_time = 200
 local touch_enable = true
 
 -- PageClass init
-local num_hymns = 123
-local hymn_table = PageClass.GetHymnTable( num_hymns )
+local num_hymns = 214
+local hymn_table = nil
 local current_hymn = 1
 
 
@@ -124,7 +124,6 @@ local function textListener( event )
 	        	URL = hymn_table[hymn_num]:first()
 	        	current_hymn = hymn_num
 
-	        	print (URL)
 	        	display_page(URL, "none")
 			end
 		end
@@ -203,9 +202,7 @@ function scene:create( event )
 	
 
 	-- PageClass init
-	local num_hymns = 123
-	local hymn_table = PageClass.GetHymnTable( num_hymns )
-	local current_hymn = 1
+	hymn_table = PageClass.GetHymnTable( num_hymns )
 	
 	-- create background image
 	background = display.newImageRect( sceneGroup, "images/title_page.png", display.contentWidth, display.contentHeight )
