@@ -1,56 +1,83 @@
 local composer = require( "composer" )
+local mui = require ( "plugin.materialui" )
  
 local scene = composer.newScene()
 
 -- forward declare
 local background, title_box, text_view_box, scroll_box, contact_box
 
+-- mui helper functions
+function goToTitle() 
+    print("here")
+    composer.gotoScene( "title" )
+end
+
 function scene:create( event )
 
     local sceneGroup = self.view
- 
-    local gradient = {
-        type="gradient",
-        color1={ 0,.300,0 }, color2={ 0,.500,0 }, direction="down"
-    }
-
-    background = display.newRect( sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight )
-    background:setFillColor( gradient )
     
+    mui.init()
 
-    -- create the different settings:
+    mui.newNavbar ({
+        name = "settings_nav",
+        height = mui.getScaleVal(80),
+        left = 0,
+        top = 0,
+        fillColor = { { type="gradient", color1 = { 1,1,1 }, color2 = { .7,.7,.7 }, direction = "down" } },
+        activeText = { 0, 0, 0 },
+        padding = mui.getScaleVal(10)
+        })
 
-    -- title bar
+    mui.newRoundedRectButton ({
+        name = "back_nav_button",
+        text = "nothing",
+        width = mui.getScaleVal(80),
+        height = mui.getScaleVal(80),
+        textColor = { 0,0,0,0 },
+        radius = 10,
+        callBack = mui.actionSwitchScene,
+        callBackData = { 
+            sceneDestination = "title",
+            sceneTransitionColor = { .5,.5,.5 },
+            sceneTransitionAnimation = true
+        },
+        image = {
+            src = "images/back-icon-sheet.png",
+            sheetIndex = 1,
+            touchIndex = 2,
+            touchFadeAnimation = true,
+            touchFadeAnimationSpeedOut = 500,
+            sheetOptions = {
+                width = 101,
+                height = 101,
+                numFrames = 2
+            }
+        }
+        })
 
-    -- just text
-    text_view_box = display.newRect( sceneGroup, display.contentCenterX, display.contentHeight*.25 - 30, display.contentWidth, display.contentHeight*.25 - 20 )
-    -- make it invisible only for detection if needed
-    text_view_box:setFillColor( 1,0,0,0 )
+    mui.newEmbossedText ({
+        x = 0,
+        y = 0,
+        name = "settings_text",
+        text = "Settings",
+        align = "center",
+        width = mui.getScaleVal(600),
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(50),
+        fillColor = { 0,0,0,1 }
+        })
 
-    local text_line = display.newLine( sceneGroup, 0, 40, display.contentWidth, 40)
-    text_line:setStrokeColor( 0.5,0.5,0.5, 1 )
-    text_line.strokeWidth = 8
+    mui.attachToNavBar ( "settings_nav", {
+            widgetName = "back_nav_button",
+            widgetType = "RectButton",
+            align = "left"
+        })
 
-    -- type of scroll
-    scroll_box = display.newRect( sceneGroup, display.contentCenterX, display.contentHeight*.5 - display.contentHeight*.125 + 10, display.contentWidth, display.contentHeight*.25 - 20)
-    -- make it invisible only for detection if needed
-    scroll_box:setFillColor( 0,1,0,0 )
-
-    local scroll_line = display.newLine( sceneGroup, 0, (display.contentCenterY/2 + 20), display.contentWidth, (display.contentCenterY/2 + 20))
-    scroll_line:setStrokeColor( 0.5,0.5,0.5, 1 )
-    scroll_line.strokeWidth = 8
-
-    -- contact info
-    contact_box = display.newRect( sceneGroup, display.contentCenterX, display.contentHeight*.75, display.contentWidth, display.contentHeight*.5 )
-    -- make it invisible only for detection if needed
-    contact_box:setFillColor( 0,0,0,0 )
-
-    local line = display.newLine( sceneGroup, 0, display.contentCenterY, display.contentWidth, display.contentCenterY)
-    line:setStrokeColor( 0.5,0.5,0.5, 1 )
-    line.strokeWidth = 8
-
-    local contact_tex = display.newText( "This will be the contact text", display.contentCenterX, display.contentCenterY, native.systemFont, 16 )
-
+    mui.attachToNavBar ( "settings_nav", {
+            widgetName = "settings_text",
+            widgetType = "EmbossedText",
+            align = "right"
+        })
 end
  
 function scene:show( event )
@@ -82,7 +109,7 @@ function scene:destroy( event )
  
     local sceneGroup = self.view
 
- 
+    mui.destroy()
 end
  
 scene:addEventListener( "create", scene )
