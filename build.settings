@@ -1,7 +1,0 @@
-settings =
-{
-    plugins =
-    {
-        ["plugin.materialui"] = { publisherId = "com.anedix" },
-    },      
-}

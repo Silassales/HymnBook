@@ -1,15 +1,21 @@
 local composer = require( "composer" )
-local mui = require ( "plugin.materialui" )
+local mui = require( "materialui.mui" )
  
 local scene = composer.newScene()
+
+
 
 -- forward declare
 local background, title_box, text_view_box, scroll_box, contact_box
 
 -- mui helper functions
-function goToTitle() 
-    print("here")
-    composer.gotoScene( "title" )
+local function goToTitle ()
+    composer.removeScene( "settings", true )
+    composer.gotoScene( "title", "slideUp", 300)
+end
+
+local function saveTextFormat ()
+    print("saving text")
 end
 
 function scene:create( event )
@@ -18,12 +24,43 @@ function scene:create( event )
     
     mui.init()
 
+    --constants
+    local spacer = mui.getScaleVal(50)
+
+    local nav_bar_by = mui.getScaleVal(80)
+
+    local text_textsize = mui.getScaleVal(30)
+    local text_check_width_height = mui.getScaleVal(50)
+    local text_check_y = nav_bar_by + text_textsize + spacer + text_check_width_height/2
+    local text_check_x = mui.getScaleVal(500)
+
+    local text_check_text = display.newText( sceneGroup, "Display Hymn's in text format:", 0, 0, native.systemFont, 16 )
+    text_check_text:setFillColor( 1, 1, 1 )
+    text_check_text.anchorX = 0
+    text_check_text.x = 10
+    text_check_text.y = nav_bar_by + text_textsize + spacer
+    text_check_text.align = "left"
+
+
+    mui.newCheckBox ({
+        name = "check",
+        text = "check_box_outline_blank",
+        width = text_check_width_height,
+        height = text_check_width_height,
+        x = text_check_x,
+        y = text_check_y,
+        font = mui.materialFont,
+        textColor = { 1,1,1 },
+        value = 500,
+        callBack = mui.actionForCheckbox
+        })
+
     mui.newNavbar ({
         name = "settings_nav",
-        height = mui.getScaleVal(80),
+        height = nav_bar_by,
         left = 0,
         top = 0,
-        fillColor = { { type="gradient", color1 = { 1,1,1 }, color2 = { .7,.7,.7 }, direction = "down" } },
+        fillColor = { .93,.93,.93 },
         activeText = { 0, 0, 0 },
         padding = mui.getScaleVal(10)
         })
@@ -31,20 +68,15 @@ function scene:create( event )
     mui.newRoundedRectButton ({
         name = "back_nav_button",
         text = "nothing",
-        width = mui.getScaleVal(80),
-        height = mui.getScaleVal(80),
+        width = nav_bar_by,
+        height = nav_bar_by,
         textColor = { 0,0,0,0 },
         radius = 10,
-        callBack = mui.actionSwitchScene,
-        callBackData = { 
-            sceneDestination = "title",
-            sceneTransitionColor = { .5,.5,.5 },
-            sceneTransitionAnimation = true
-        },
+        callBack = goToTitle,
         image = {
             src = "images/back-icon-sheet.png",
-            sheetIndex = 1,
-            touchIndex = 2,
+            sheetIndex = 2,
+            touchIndex = 1,
             touchFadeAnimation = true,
             touchFadeAnimationSpeedOut = 500,
             sheetOptions = {
@@ -61,9 +93,9 @@ function scene:create( event )
         name = "settings_text",
         text = "Settings",
         align = "center",
-        width = mui.getScaleVal(600),
+        width = mui.getScaleVal(700),
         font = native.systemFont,
-        fontSize = mui.getScaleVal(50),
+        fontSize = mui.getScaleVal(40),
         fillColor = { 0,0,0,1 }
         })
 
