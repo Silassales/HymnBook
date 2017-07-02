@@ -3,20 +3,31 @@ local mui = require( "materialui.mui" )
  
 local scene = composer.newScene()
 
-
-
 -- forward declare
 local background, title_box, text_view_box, scroll_box, contact_box
 
 -- mui helper functions
+
+-- removes current scene and moves to title screen
 local function goToTitle ()
     composer.removeScene( "settings", true )
     composer.gotoScene( "title", "slideUp", 300)
 end
 
-local function saveTextFormat ()
-    print("saving text")
+-- function to save text/full page view option
+local function saveTextView ( e )
+    mui.actionForCheckbox(e)
+
+    print("saving text view")
 end
+
+-- function to save scroll up/down left/right option
+local function saveScrollType ( e )
+    mui.actionForCheckbox(e)
+
+    print("saving scroll type")
+end
+
 
 function scene:create( event )
 
@@ -24,37 +35,70 @@ function scene:create( event )
     
     mui.init()
 
-    --constants
-    local spacer = mui.getScaleVal(50)
+    -- attributes of GUI
+    local spacer = mui.getScaleVal(100)
 
     local nav_bar_by = mui.getScaleVal(80)
 
-    local text_textsize = mui.getScaleVal(30)
-    local text_check_width_height = mui.getScaleVal(50)
-    local text_check_y = nav_bar_by + text_textsize + spacer + text_check_width_height/2
-    local text_check_x = mui.getScaleVal(500)
+    local text_x = 10
+    local text_size = mui.getScaleVal(30)
+    local check_box_x = mui.getScaleVal(500)
+    local check_width = mui.getScaleVal(50)
 
-    local text_check_text = display.newText( sceneGroup, "Display Hymn's in text format:", 0, 0, native.systemFont, 16 )
+    local text_text_y = nav_bar_by + spacer + text_size
+    local text_check_y = nav_bar_by + text_size + spacer + check_width/2
+
+    local scroll_text_y = text_text_y + text_size + spacer
+    local scroll_check_y = text_text_y + text_size + spacer + check_width/2
+
+    -- Text text/check box
+    -- allows users to specify just text view or default full hymn page view
+    local text_check_text = display.newText( sceneGroup, "Display Hymn's in text format:", 0, 0, native.systemFont, text_size )
     text_check_text:setFillColor( 1, 1, 1 )
     text_check_text.anchorX = 0
-    text_check_text.x = 10
-    text_check_text.y = nav_bar_by + text_textsize + spacer
+    text_check_text.x = text_x
+    text_check_text.y = text_text_y
     text_check_text.align = "left"
 
-
     mui.newCheckBox ({
-        name = "check",
+        name = "text_check",
         text = "check_box_outline_blank",
-        width = text_check_width_height,
-        height = text_check_width_height,
-        x = text_check_x,
+        width = check_width,
+        height = check_width,
+        x = check_box_x,
         y = text_check_y,
         font = mui.materialFont,
         textColor = { 1,1,1 },
         value = 500,
-        callBack = mui.actionForCheckbox
+        callBack = saveTextView
         })
 
+    -- Scroll text/check box
+    -- allows users to specify type of scroll, either up/down or (defualt) left/right
+    local scroll_type_text = display.newText( sceneGroup, "Scroll down (default right):", 0, 0, native.systemFont, text_size )
+    scroll_type_text:setFillColor( 1, 1, 1 )
+    scroll_type_text.anchorX = 0
+    scroll_type_text.x = text_x
+    scroll_type_text.y = scroll_text_y
+    scroll_type_text.align = "left"
+
+    mui.newCheckBox ({
+        name = "scroll_check",
+        text = "check_box_outline_blank",
+        width = check_width,
+        height = check_width,
+        x = check_box_x,
+        y = scroll_check_y,
+        font = mui.materialFont,
+        textColor = { 1,1,1 },
+        value = 500,
+        callBack = saveScrollType
+        })  
+
+    -- Nav bar
+    -- set last so that it writes over all other objects
+    -- Only contains a back button that goes back to the menu screen
+    -- and a text object that contains the string "Settings"
     mui.newNavbar ({
         name = "settings_nav",
         height = nav_bar_by,
@@ -65,6 +109,7 @@ function scene:create( event )
         padding = mui.getScaleVal(10)
         })
 
+    -- Back button
     mui.newRoundedRectButton ({
         name = "back_nav_button",
         text = "nothing",
@@ -87,6 +132,7 @@ function scene:create( event )
         }
         })
 
+    -- Text
     mui.newEmbossedText ({
         x = 0,
         y = 0,
