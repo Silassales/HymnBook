@@ -19,7 +19,7 @@ local next_screen_time = 200
 local touch_enable = true
 
 -- PageClass init
-local num_hymns = 214
+local num_hymns = 263
 local hymn_table = nil
 local current_hymn = 1
 
