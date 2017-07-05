@@ -11,7 +11,7 @@ local background, title_box, text_view_box, scroll_box, contact_box
 -- removes current scene and moves to title screen
 local function goToTitle ()
     composer.removeScene( "settings", true )
-    composer.gotoScene( "title", "slideUp", 300)
+    composer.gotoScene( "title", "slideDown", 300)
 end
 
 -- function to save text/full page view option
@@ -26,6 +26,17 @@ local function saveScrollType ( e )
     mui.actionForCheckbox(e)
 
     print("saving scroll type")
+end
+
+--function to open links
+-- has to be on a object with a .link attribute
+local function openTextURL ( e )
+    if (e.phase == "ended") then
+        if (e.target.link ~= nil) then
+            system.openURL( e.target.link )
+        end
+    end
+    return true
 end
 
 
@@ -50,6 +61,10 @@ function scene:create( event )
 
     local scroll_text_y = text_text_y + text_size + spacer
     local scroll_check_y = text_text_y + text_size + spacer + check_width/2
+
+    local text_email_y = scroll_text_y + text_size + spacer
+    local text_github_y = text_email_y + text_size + spacer
+    local text_enjoy_y = text_github_y + text_size + spacer
 
     -- Text text/check box
     -- allows users to specify just text view or default full hymn page view
@@ -94,6 +109,58 @@ function scene:create( event )
         value = 500,
         callBack = saveScrollType
         })  
+
+    -- contant info 
+    -- Will include:
+        -- submit feedback/comments/concerns/bugs to bocreations2017@outlook.com (as a mail link)
+        -- follow project on github --> https://github.com/BOCreations/ChristadelphianHymnBook (as a link)
+        -- Hope you enjoy!
+
+    local text_options = {
+        text = "Please submit feedback/comments/concerns/bugs to bocreations2017@outlook.com",
+        x = display.contentCenterX,
+        y = text_email_y,
+        width = display.contentWidth,
+        height = 0,
+        fontSize = text_size,
+        align = "center"
+    }
+    local text_email = display.newText( text_options )
+    text_email:setFillColor( 1, 1, 1 )
+    sceneGroup:insert(text_email)
+    text_email.link = "mailto:bocreations2017@outlook.com?subject=Hi%20there&body=I%20just%20wanted%20to%20say%2C%20Hi!"
+
+    text_email:addEventListener( "touch", openTextURL )
+
+    text_options = {
+        text = "Follow project on github --> https://github.com/BOCreations/ChristadelphianHymnBook",
+        x = display.contentCenterX,
+        y = text_github_y,
+        width = display.contentWidth,
+        height = 0,
+        fontSize = text_size,
+        align = "center"
+    }
+    local text_github = display.newText( text_options )
+    text_github:setFillColor( 1, 1, 1 )
+    sceneGroup:insert(text_github)
+    text_github.link = "https://github.com/BOCreations/ChristadelphianHymnBook"
+
+    text_github:addEventListener( "touch", openTextURL )
+
+    text_options = {
+        text = "Hope you enjoy!",
+        x = display.contentCenterX,
+        y = text_enjoy_y,
+        width = display.contentWidth,
+        height = 0,
+        fontSize = text_size,
+        align = "center"
+    }
+    local text_enjoy = display.newText( text_options )
+    text_enjoy:setFillColor( 1, 1, 1 )
+    sceneGroup:insert(text_enjoy)
+
 
     -- Nav bar
     -- set last so that it writes over all other objects

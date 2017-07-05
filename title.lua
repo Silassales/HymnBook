@@ -45,7 +45,7 @@ end
 local function settingsButton( event )
  
     if ( "ended" == event.phase ) then
-        composer.gotoScene( "settings", "slideDown", 200 )
+        composer.gotoScene( "settings", "slideUp", 200 )
     end
 end
 
