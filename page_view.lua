@@ -5,6 +5,7 @@
 -----------------------------------------------------------------------------------------
 
 local PageClass = require( "page_class" )
+local save_file = require( "save_file" )
 local composer = require( "composer" )
 local scene = composer.newScene()
 
@@ -12,6 +13,9 @@ local scene = composer.newScene()
 local background, current_page
 -- in order to remove in page_transition create a a local old_page
 local old_page = nil
+--settings values
+local scrollType = "right"
+local textView = false
 
 local screen_width = display.contentWidth
 local screen_height = display.contentHeight
@@ -39,50 +43,100 @@ function display_page(URL, move_direction)
 
 		current_page = display.newImageRect( scene.view, URL, display.contentWidth, display.contentHeight )	
 		
-		--start animation on old page
-		if old_page ~= nil then
-			if move_direction == "right" then
-				old_page.anchorX = 0
-				old_page.x, old_page.y = 0, 40
-			elseif move_direction == "left" then
-				old_page.anchorX = 0
-				old_page.x, old_page.y = 0, 40
+		if scrollType == "right" then
+			--start animation on old page
+			if old_page ~= nil then
+				if move_direction == "right" then
+					old_page.anchorX = 0
+					old_page.x, old_page.y = 0, 40
+				elseif move_direction == "left" then
+					old_page.anchorX = 0
+					old_page.x, old_page.y = 0, 40
+				else
+					old_page.anchorX = 0
+					old_page.x, current_page.y = 0, 40
+				end
+				if move_direction == "left" then
+					transition.moveTo( old_page, { x = -screen_width, time=next_screen_time })
+				elseif move_direction == "right" then
+					transition.moveTo( old_page, { x = screen_width, time=next_screen_time })
+				end
+			end
+
+			-- start animation on next page
+			if current_page == nil then
+				if URL == nil then
+					native.showAlert( "Page not found", "Cant find URL requested. URL nil. Current hymn " .. current_hymn)
+				else 
+					native.showAlert( "Page not found", "Cant find URL requested." .. URL) 
+				end
 			else
-				old_page.anchorX = 0
-				old_page.x, current_page.y = 0, 40
+				current_page.anchorY = 0
+				if move_direction == "right" then
+					current_page.anchorX = 1.0
+					current_page.x, current_page.y = 0, 40
+				elseif move_direction == "left" then
+					current_page.anchorX = 0
+					current_page.x, current_page.y = screen_width, 40
+				else
+					current_page.anchorX = 0
+					current_page.x, current_page.y = 0, 40
+					touch_enable = true
+				end
 			end
 			if move_direction == "left" then
-				transition.moveTo( old_page, { x = -screen_width, time=next_screen_time })
+				transition.moveTo( current_page, { x = 0, time=next_screen_time, onComplete=page_transition_listener} )
 			elseif move_direction == "right" then
-				transition.moveTo( old_page, { x = screen_width, time=next_screen_time })
-			end
-		end
-
-		-- start animation on next page
-		if current_page == nil then
-			if URL == nil then
-				native.showAlert( "Page not found", "Cant find URL requested. URL nil. Current hymn " .. current_hymn)
-			else 
-				native.showAlert( "Page not found", "Cant find URL requested." .. URL) 
+				transition.moveTo( current_page, { x = screen_width, time=next_screen_time, onComplete=page_transition_listener} )
 			end
 		else
-			current_page.anchorY = 0
-			if move_direction == "right" then
-				current_page.anchorX = 1.0
-				current_page.x, current_page.y = 0, 40
-			elseif move_direction == "left" then
-				current_page.anchorX = 0
-				current_page.x, current_page.y = screen_width, 40
+			--start animation on old page
+			if old_page ~= nil then
+				old_page.anchorX = 0
+				if move_direction == "down" then
+					old_page.anchorY = 0
+					old_page.x, old_page.y = 0, 40
+				elseif move_direction == "up" then
+					old_page.anchorY = 0
+					old_page.x, old_page.y = 0, 40
+				else
+					old_page.anchorY = 0
+					old_page.x, current_page.y = 0, 40
+				end
+				if move_direction == "up" then
+					transition.moveTo( old_page, { y = -screen_height, time=next_screen_time })
+				elseif move_direction == "down" then
+					transition.moveTo( old_page, { y = screen_height, time=next_screen_time })
+				end
+			end
+
+			-- start animation on next page
+			if current_page == nil then
+				if URL == nil then
+					native.showAlert( "Page not found", "Cant find URL requested. URL nil. Current hymn " .. current_hymn)
+				else 
+					native.showAlert( "Page not found", "Cant find URL requested." .. URL) 
+				end
 			else
 				current_page.anchorX = 0
-				current_page.x, current_page.y = 0, 40
-				touch_enable = true
+				current_page.anchorY = 0
+				if move_direction == "up" then
+					current_page.anchorY = 0
+					current_page.x, current_page.y = 0, screen_height
+				elseif move_direction == "down" then
+					current_page.anchorY = 0
+					current_page.x, current_page.y = 0, -screen_height
+				else
+					current_page.anchorY = 0
+					current_page.x, current_page.y = 0, 40
+					touch_enable = true
+				end
 			end
-		end
-		if move_direction == "left" then
-			transition.moveTo( current_page, { x = 0, time=next_screen_time, onComplete=page_transition_listener} )
-		elseif move_direction == "right" then
-			transition.moveTo( current_page, { x = screen_width, time=next_screen_time, onComplete=page_transition_listener} )
+			if move_direction == "up" then
+				transition.moveTo( current_page, { y = 40, time=next_screen_time, onComplete=page_transition_listener} )
+			elseif move_direction == "down" then
+				transition.moveTo( current_page, { y = 40, time=next_screen_time, onComplete=page_transition_listener} )
+			end
 		end
 	end
 end
@@ -131,7 +185,7 @@ local function textListener( event )
 end
 
 -- function to show next animation
-local function showNext()
+local function showNext(direction)
 	URL = hymn_table[current_hymn]:next()
 	
 	-- need to get the first page of the next hymn
@@ -151,10 +205,10 @@ local function showNext()
 		end
 	end
 
-	display_page(URL, "left")
+	display_page(URL, direction)
 end
 
-local function showPrev()
+local function showPrev(direction)
 	local cont_show = true
 	URL = hymn_table[current_hymn]:prev()
 	
@@ -177,7 +231,7 @@ local function showPrev()
 	end
 
 	if cont_show then
-		display_page(URL, "right")
+		display_page(URL, direction)
 	end
 end
 
@@ -185,14 +239,23 @@ end
 local function onPageTap ( event )
 	-- lower key board if it is up to provide better user experience
 	native.setKeyboardFocus( nil )
-	if event.x > (screen_width / 2) then
-		showNext()
+	if scrollType == "right" then
+		if event.x > (screen_width / 2) then
+			showNext("left")
+		else 
+			showPrev("right")
+		end
 	else 
-		showPrev()
+		if event.y > (screen_height / 2) then
+			showNext("up")
+		else 
+			showPrev("down")
+		end
 	end
 end
 
 function scene:create( event )
+	composer.removeHidden( false )
 	local sceneGroup = self.view
 
 	-- Called when the scene's view does not exist.
@@ -226,21 +289,54 @@ function scene:create( event )
 end
 
 function scene:show( event )
+	composer.removeHidden( false )
 	local sceneGroup = self.view
 	local phase = event.phase
 
 	if phase == "will" then
-		-- Called when the scene is still off screen and is about to move on screen
-	-- remove hymn_select_box when using the back button to go back to fix some werid graphics bug 
-	-- where the box would follow the screen a bit
-	if hymn_select_box == nil then
-		hymn_select_box = native.newTextField( screen_width / 2, 20, screen_width, 40 )
-		hymn_select_box:resizeFontToFitHeight( )
-		hymn_select_box.inputType = "number"
-		hymn_select_box.isEditable = true
-		hymn_select_box:addEventListener( "userInput", textListener )
-		sceneGroup:insert( hymn_select_box )
-	end
+		--get saved values
+		local temp = save_file.loadTable("settings")
+
+		if temp == nil then
+	        temp = {}
+	        temp.textView = "False"
+	        temp.scrollType = "Right"
+	        save_file.saveTable("settings")
+    	end
+		--get/set/init textView
+		if temp.textView then
+			if temp.textView == "true" then
+				textView = true
+			else 
+				textView = false
+			end
+		else 
+			textView = false
+			temp.textView = "false"
+		end
+		--get/set/init scrollType
+		if temp.scrollType then
+			if temp.scrollType == "Down" then
+				scrollType = "down"
+			else
+				scrollType = "right"
+			end
+		else
+			scrollType = "right"
+			temp.scrollType = "Right"
+		end
+
+		save_file.saveTable(temp, "settings")
+
+
+		if hymn_select_box == nil then
+			hymn_select_box = native.newTextField( screen_width / 2, 20, screen_width, 40 )
+			hymn_select_box:resizeFontToFitHeight( )
+			hymn_select_box.inputType = "number"
+			hymn_select_box.isEditable = true
+			hymn_select_box:addEventListener( "userInput", textListener )
+			sceneGroup:insert( hymn_select_box )
+		end
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
@@ -261,7 +357,7 @@ function scene:hide( event )
 		--
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
-		hymn_select_box:removeSelf( )
+		hymn_select_box:removeSelf()
 		hymn_select_box = nil
 	elseif phase == "did" then
 		-- Called when the scene is now off screen

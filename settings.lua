@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local mui = require( "materialui.mui" )
+local save_file = require( "save_file" )
  
 local scene = composer.newScene()
 
@@ -17,15 +18,77 @@ end
 -- function to save text/full page view option
 local function saveTextView ( e )
     mui.actionForCheckbox(e)
+    local value_saved = "Text view"
 
-    print("saving text view")
+    --either init or switch value
+    local temp = save_file.loadTable("settings")
+    if temp.textView then
+        if temp.textView == "False" then
+            temp.textView = "True"
+        else
+            temp.textView = "False"
+            value_saved = "Hymn view"
+        end
+    else
+        temp.textView = "True"
+    end
+
+    save_file.saveTable(temp, "settings")
+
+    -- create a small toast to show that setting has been saved
+    mui.newToast({
+        name = "text_saved_toast",
+        text = "You are now in " .. value_saved,
+        radius = 20,
+        width = mui.getScaleVal(300),
+        height = mui.getScaleVal(50),
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(24),
+        fillColor = { 1, 1, 1, 1 },
+        textColor = { 0, 0, 0, 1 },
+        top = mui.getScaleVal(120),
+        easingIn = 500,
+        easingOut = 500,
+        callBack = nil
+    })
 end
 
 -- function to save scroll up/down left/right option
 local function saveScrollType ( e )
     mui.actionForCheckbox(e)
+    local value_saved = "scroll down"
 
-    print("saving scroll type")
+    --either init or switch value
+    local temp = save_file.loadTable("settings")
+    if temp.scrollType then
+        if temp.scrollType == "Right" then
+            temp.scrollType = "Down"
+        else
+            temp.scrollType = "Right"
+            value_saved = "scoll right"
+        end
+    else
+        temp.scrollType = "Down"
+    end
+
+    save_file.saveTable(temp, "settings")
+
+    -- create a small toast to show that setting has been saved
+    mui.newToast({
+        name = "scroll_saved_toast",
+        text = "Now set to " .. value_saved,
+        radius = 20,
+        width = mui.getScaleVal(300),
+        height = mui.getScaleVal(50),
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(24),
+        fillColor = { 1, 1, 1, 1 },
+        textColor = { 0, 0, 0, 1 },
+        top = mui.getScaleVal(120),
+        easingIn = 500,
+        easingOut = 500,
+        callBack = nil
+    })
 end
 
 --function to open links
@@ -75,9 +138,29 @@ function scene:create( event )
     text_check_text.y = text_text_y
     text_check_text.align = "left"
 
+    --get saved values
+    local temp = save_file.loadTable("settings")
+
+    if temp == nil then
+        temp = {}
+        temp.textView = "False"
+        temp.scrollType = "Right"
+        save_file.saveTable("settings")
+    end
+
+    local isChecked = false
+    local check_image = "check_box_outline_blank"
+    if temp.textView then
+        if temp.textView == "True" then
+            isChecked = true
+            check_image = "check_box"
+        end
+    end
+
     mui.newCheckBox ({
         name = "text_check",
-        text = "check_box_outline_blank",
+        text = check_image,
+        isChecked = isChecked,
         width = check_width,
         height = check_width,
         x = check_box_x,
@@ -97,10 +180,29 @@ function scene:create( event )
     scroll_type_text.y = scroll_text_y
     scroll_type_text.align = "left"
 
+    --get saved values
+    local temp = save_file.loadTable("settings")
+    
+    if temp == nil then
+        temp = {}
+        temp.textView = "False"
+        temp.scrollType = "Right"
+        save_file.saveTable("settings")
+    end
+
+    isChecked = false
+    check_image = "check_box_outline_blank"
+    if temp.scrollType then
+        if temp.scrollType == "Down" then
+            isChecked = true
+            check_image = "check_box"
+        end
+    end
+
     mui.newCheckBox ({
         name = "scroll_check",
-        text = "check_box_outline_blank",
-        width = check_width,
+        text = check_image,
+        isChecked = isChecked,
         height = check_width,
         x = check_box_x,
         y = scroll_check_y,
