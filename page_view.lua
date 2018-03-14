@@ -7,6 +7,9 @@
 local PageClass = require( "page_class" )
 local save_file = require( "save_file" )
 local composer = require( "composer" )
+local mui = require( "materialui.mui" )
+local muiData = require( "materialui.mui-data" )
+
 local scene = composer.newScene()
 
 -- forward declarations and other locals
@@ -23,10 +26,32 @@ local next_screen_time = 200
 local touch_enable = true
 
 -- PageClass init
-local num_hymns = 263
+local num_hymns = 438
 local hymn_table = nil
 local current_hymn = 1
 
+-- Tool bar current checked
+local tool_pages = {"Home", "Second", "Third"}
+local tool_curr_checked = 2
+local tool_max = 3
+
+-- tool bar listener
+local function tool_bar_listener(e)
+	mui.actionForToolbar(e)
+
+	tool_curr_checked = tool_curr_checked + 1
+	if(tool_curr_checked > tool_max) then
+		tool_curr_checked = 1
+	end
+
+	if(tool_pages[tool_curr_checked] == "Home") then
+		print("Home")
+	elseif (tool_pages[tool_curr_checked] == "Second") then
+		print("Second")
+	elseif (tool_pages[tool_curr_checked] == "Third") then
+		print("Third")
+	end
+end
 
 -- helpful functions
 
@@ -41,7 +66,7 @@ function display_page(URL, move_direction)
 		touch_enable = false
 		old_page = current_page
 
-		current_page = display.newImageRect( scene.view, URL, display.contentWidth, display.contentHeight )	
+		current_page = display.newImageRect( scene.view, URL, display.contentWidth, display.contentHeight - mui.getScaleVal(70)/2 - 40 )	
 		
 		if scrollType == "right" then
 			--start animation on old page
@@ -237,6 +262,8 @@ end
 
 -- touch event listener for background object
 local function onPageTap ( event )
+	-- make sure that we arent tapping on the bar on the bottom
+	if event.y > (display.contentHeight - mui.getScaleVal(70)) then return end
 	-- lower key board if it is up to provide better user experience
 	native.setKeyboardFocus( nil )
 	if scrollType == "right" then
@@ -266,12 +293,15 @@ function scene:create( event )
 
 	-- PageClass init
 	hymn_table = PageClass.GetHymnTable( num_hymns )
+
+	mui.init()
 	
 	-- create background image
 	background = display.newImageRect( sceneGroup, "images/title_page.png", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 40
+	background.height = display.contentHeight - mui.getScaleVal(70)/2 - 40
 
 	background:addEventListener( "tap", onPageTap )
 
@@ -285,11 +315,13 @@ function scene:create( event )
 	sceneGroup:insert( hymn_select_box )
 	-- Add the key event listener
 	Runtime:addEventListener( "key", onKeyEvent )
-
 end
 
 function scene:show( event )
 	composer.removeHidden( false )
+	
+	local toolbar = mui.getWidgetBaseObject("toolbar")
+
 	local sceneGroup = self.view
 	local phase = event.phase
 
@@ -337,6 +369,28 @@ function scene:show( event )
 			hymn_select_box:addEventListener( "userInput", textListener )
 			sceneGroup:insert( hymn_select_box )
 		end
+
+		local buttonHeight = mui.getScaleVal(70)
+		mui.newToolbar({
+			name = "toolbar",
+			--width = mui.getScaleVal(500), -- defaults to display.contentWidth
+			height = mui.getScaleVal(70),
+			buttonHeight = buttonHeight,
+			x = 0,
+			y = (display.contentHeight - buttonHeight/2),
+			layout = "horizontal",
+			labelFont = native.systemFont,
+			fillColor = { 0, 0.46, 1 },
+			labelColor = { 1, 1, 1 },
+			labelColorOff = { 0.41, 0.03, 0.49 },
+			callBack = tool_bar_listener,
+			sliderColor = { 1, 1, 1 },
+			list = {
+				{ key = "Home", value = "1", icon="home", labelText="Home", isActive = false },
+				{ key = "Current", value = "2", icon="view_list", labelText="Read", isActive = true },
+				{ key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+			}
+		})
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
@@ -359,15 +413,24 @@ function scene:hide( event )
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 		hymn_select_box:removeSelf()
 		hymn_select_box = nil
+
+		local toolbar = mui.getWidgetBaseObject("toolbar")
+		if toolbar then
+			print("here")
+			toolbar.isVisible = false
+		end
+
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
 		
 	end		
 
+	mui.destroy()
 end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
+	mui.destroy()
 	
 	-- Called prior to the removal of scene's "view" (sceneGroup)
 	-- 
