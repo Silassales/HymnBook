@@ -30,29 +30,6 @@ local num_hymns = 438
 local hymn_table = nil
 local current_hymn = 1
 
--- Tool bar current checked
-local tool_pages = {"Home", "Second", "Third"}
-local tool_curr_checked = 2
-local tool_max = 3
-
--- tool bar listener
-local function tool_bar_listener(e)
-	mui.actionForToolbar(e)
-
-	tool_curr_checked = tool_curr_checked + 1
-	if(tool_curr_checked > tool_max) then
-		tool_curr_checked = 1
-	end
-
-	if(tool_pages[tool_curr_checked] == "Home") then
-		print("Home")
-	elseif (tool_pages[tool_curr_checked] == "Second") then
-		print("Second")
-	elseif (tool_pages[tool_curr_checked] == "Third") then
-		print("Third")
-	end
-end
-
 -- helpful functions
 
 function page_transition_listener ( obj )
@@ -319,8 +296,6 @@ end
 
 function scene:show( event )
 	composer.removeHidden( false )
-	
-	local toolbar = mui.getWidgetBaseObject("toolbar")
 
 	local sceneGroup = self.view
 	local phase = event.phase
@@ -369,28 +344,6 @@ function scene:show( event )
 			hymn_select_box:addEventListener( "userInput", textListener )
 			sceneGroup:insert( hymn_select_box )
 		end
-
-		local buttonHeight = mui.getScaleVal(70)
-		mui.newToolbar({
-			name = "toolbar",
-			--width = mui.getScaleVal(500), -- defaults to display.contentWidth
-			height = mui.getScaleVal(70),
-			buttonHeight = buttonHeight,
-			x = 0,
-			y = (display.contentHeight - buttonHeight/2),
-			layout = "horizontal",
-			labelFont = native.systemFont,
-			fillColor = { 0, 0.46, 1 },
-			labelColor = { 1, 1, 1 },
-			labelColorOff = { 0.41, 0.03, 0.49 },
-			callBack = tool_bar_listener,
-			sliderColor = { 1, 1, 1 },
-			list = {
-				{ key = "Home", value = "1", icon="home", labelText="Home", isActive = false },
-				{ key = "Current", value = "2", icon="view_list", labelText="Read", isActive = true },
-				{ key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
-			}
-		})
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
@@ -413,12 +366,6 @@ function scene:hide( event )
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 		hymn_select_box:removeSelf()
 		hymn_select_box = nil
-
-		local toolbar = mui.getWidgetBaseObject("toolbar")
-		if toolbar then
-			print("here")
-			toolbar.isVisible = false
-		end
 
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
