@@ -175,12 +175,19 @@ local function textListener( event )
  
     elseif ( event.phase == "editing" ) then
     	if tonumber(event.target.text) ~= nil then
-	        local hymn_num = tonumber(event.target.text)
-	        if (hymn_num > 0) and (hymn_num <= num_hymns) then
-	        	URL = hymn_table[hymn_num]:first()
-	        	current_hymn = hymn_num
+			local hymn_num = tonumber(event.target.text)
+			if(hymn_num == 212) then
+				URL = "images/hymn212.png"
 
-	        	display_page(URL, "none")
+				current_hymn = 212
+				display_page(URL, "none")
+			else 
+				if (hymn_num > 0) and (hymn_num <= num_hymns) then
+	        		URL = hymn_table[hymn_num]:first()
+	        		current_hymn = hymn_num
+
+					display_page(URL, "none")
+				end
 			end
 		end
     end
